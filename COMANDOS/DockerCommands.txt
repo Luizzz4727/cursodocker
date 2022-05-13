@@ -1,0 +1,337 @@
+Instalar docker:
+
+apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+apt-key fingerprint 0EBFCD88
+
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+apt-get install docker-ce
+
+sudo usermod -aG docker ${USER}
+
+=========================================================
+
+DOCKER
+
+=========================================================
+
+---------------------------------------------------------
+
+Procurar por uma imagem:
+
+docker search <nome_imagem>
+
+Procurar por uma imagem com limite de retorno de registros:
+
+docker search --limit <num_limite> <nome_imagem>
+
+Procurar por uma imagem filtrando pelas estrelas:
+
+docker search --filter stars=<num_estrelas> <nome_imagem>
+
+---------------------------------------------------------
+
+Listar imagens:
+
+docker image ls
+
+docker images
+
+---------------------------------------------------------
+
+Baixar imagem (baixará a imagem mais recente):
+
+docker pull <nome_imagem>
+
+Baixar imagem com tag específica:
+
+docker pull <nome_imagem>:<tag>
+
+---------------------------------------------------------
+
+Remover imagem:
+
+docker rmi <nome_imagem>(:<tag>)
+
+Remover todas as imagens:
+
+docker rmi -f $(docker images -q)
+
+---------------------------------------------------------
+
+Listar containers:
+
+docker ps -a
+
+Listar apenas o id dos containers:
+
+docker ps -aq
+
+---------------------------------------------------------
+
+Rodar um container de uma imagem (Se a sessão finalizar, o container fechará):
+
+docker run -it <nome_imagem>
+
+Rodar um container de uma imagem (Se a sessão finalizar, o container não fechará):
+
+docker run -dit <nome_imagem>
+
+Rodar um container de uma imagem (Se a sessão finalizar, o container será removido):
+
+docker run -it --rm <nome_imagem>
+
+Rodar um container com um nome personalizado:
+
+docker run -dit --name <nome_container> <nome_imagem>
+
+Rodar um container e entrar em um diretório:
+
+docker run -it -w /<nome_diretorio> --name <nome_container> <nome_imagem>
+
+Rodar um container, entrar em um diretório e enviar uma variável:
+
+docker run -it -w /<nome_diretorio> --env <nome_variavel>=<valor_variavel> --name <nome_container> <nome_imagem>
+
+---------------------------------------------------------
+
+Iniciar um container:
+
+docker start <id_container>||<nome_container>
+
+Iniciar um container com interação:
+
+docker start -i <id_container>||<nome_container>
+
+Pausar um container: 
+
+docker pause <id_container>||<nome_container>
+
+Despausar um container: 
+
+docker unpause <id_container>||<nome_container>
+
+Finalizar um container: 
+
+docker stop <id_container>||<nome_container>
+
+Remover um container:
+
+docker rm <id_container>||<nome_container>
+
+docker container rm <id_container>||<nome_container>
+
+Remover um container a força:
+
+docker container rm -f <id_container>||<nome_container>
+
+Remover todos os containers:
+
+docker rm -f $(docker ps -aq)
+
+---------------------------------------------------------
+
+Limitar memória e CPU para um container:
+
+docker run -dit --name <nome_container> -m <quantidade_memoria>m --cpuset-cpus="<memoria_base>-<memoria_topo>" <nome_imagem>
+
+docker run -dit --name <nome_container> --cpus=".<memoria_porcentagem>" <nome_imagem>
+
+docker run -dit --name <nome_container> -m <quantidade_memoria>m <nome_imagem>
+
+---------------------------------------------------------
+
+Acessar um container:
+
+docker exec -it <id_container>||<nome_container> bash||sh (bash para ubuntu, sh para alpine)
+
+---------------------------------------------------------
+
+Copiar arquivo do container para o servidor vice-versa:
+
+docker <nome_container> <nome_container>:<caminho_arquivo> <onde_ficara_servidor>
+
+docker <nome_container> <arquivo> <nome_container>:<onde_ficara_container>
+
+Copiar um arquivo de um container:
+
+docker cp <nome_container>:<diretorio_arquivo> <onde_ficara_servidor>
+
+---------------------------------------------------------
+
+Verificar espaço em disco que o docker consome:
+
+docker system df
+
+docker system df -v (Com mais detalhes)
+
+---------------------------------------------------------
+
+Exportar container:
+
+docker export <nome_container> > <nome_arquivo>.tar
+
+Importar container exportado e salvar como imagem:
+
+docker import <nome_arquivo>.tar <nome_imagem>:<tag>
+
+Rodar container nesta imagem:
+
+docker run -it myubuntu /bin/bash
+
+---------------------------------------------------------
+
+Transformar um container em uma imagem:
+
+docker commit <nome_container> <nome_imagem>:<tag>
+
+Salvar imagem de um container em um arquivo:
+
+docker save <nome_imagem>:<tag> > <nome_arquivo>.tar
+
+Carregar arquivo de uma imagem de um container:
+
+docker load < <nome_arquivo>.tar
+
+---------------------------------------------------------
+
+Listar volume:
+
+docker volume ls
+
+Criar volume:
+
+docker volume create <nome_volume>
+
+Criar um container associado ao volume:
+
+docker run -dit --name <nome_container> --mount type=volume,src=<nome_volume>,dst=<diretorio_destino> <nome_imagem> // O que for criado no diretório de destino será guardado no volume que está fora do container
+
+Criar um container e utilizar arquivos em volume:
+
+docker run -dit --name <nome_container> --volume <nome_volume>:<diretorio_destino> <nome_imagem>
+
+Remover volume:
+
+docker volume rm <nome_volume>
+
+---------------------------------------------------------
+
+Criar rede:
+
+docker network create <nome_rede>
+
+Criar rede definindo driver, subnet e gateway:
+
+docker network create --driver <driver> --subnet=<subnet> --gateway=<gateway> <nome_rede>
+
+Listar redes:
+
+docker network ls
+
+Listar rede com mais detalhes:
+
+docker network inspect <nome_rede>
+
+Criar container com uma rede:
+
+docker run -dit --name <nome_container> --network=<nome_rede> <nome_imagem>
+
+Remover network:
+
+docker network remove <nome_rede>
+
+Ver detalhes de rede de um container:
+
+docker inspect <nome_container> | grep -i ip||network
+
+Conectar um container em uma rede:
+
+docker network connect <nome_rede> <id_container>||<nome_container>
+
+Desconectar um container em uma rede:
+
+docker network disconnect <nome_rede> <id_container>||<nome_container>
+
+---------------------------------------------------------
+
+Criar um container com uma porta:
+
+docker run -dit --name meuhttpd -p 8080:80 httpd (APACHE)
+
+docker run -dit --name meutomcat -P tomcat (O "p" maiúsculo trás uma porta da imagem)
+
+---------------------------------------------------------
+
+Criar uma imagem de uma aplicação:
+
+docker build <diretorio> (Lembrando que é necessário o Dockerfile no diretório para que seja possível criar a imagem)
+
+Criar uma imagem de uma aplicação colocando nome e tag:
+
+docker build -t <nome_imagem>:<tag_imagem> <diretorio> (Se não colocar tag, por padrão será latest)
+
+---------------------------------------------------------
+
+Renomear nome e tag de imagens:
+
+docker tag <id_imagem> <nome_imagem>:<tag_imagem>
+
+---------------------------------------------------------
+
+Remover coisas inutilizadas:
+
+docker system prune
+
+Remover volumes inutilizados:
+
+docker volume prune
+
+Remover networks inutilizadas:
+
+docker network prune
+
+---------------------------------------------------------
+
+Verificar processamento de um container:
+
+docker top <nome_container>
+
+Ver detalhes de um container:
+
+docker inspect <nome_container>
+
+Verificar processamento do Docker:
+
+docker stats
+
+---------------------------------------------------------
+
+Logar na sua conta Docker no terminal:
+
+docker login
+
+Deslogar da sua conta Docker no terminal:
+
+docker logout
+
+---------------------------------------------------------
+
+Enviar uma imagem para um repositório:
+
+docker push <nome_imagem> (O nome da imagem deve ser "nome_usuario/nome_repositorio")
+
+Enviar uma nova versão de uma imagem para o repositório:
+
+docker push <nome_imagem>:<nome_tag> (Crie uma nova imagem com uma tag diferente)
+
+---------------------------------------------------------
+
+Remover todos os containers parados:
+
+docker rm $(docker ps --filter "status=exited" -q)
+
+---------------------------------------------------------

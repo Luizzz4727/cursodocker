@@ -1,0 +1,33 @@
+Instalar docker compose:
+
+https://docs.docker.com/compose/install/
+
+=========================================================
+
+DOCKER COMPOSE
+
+=========================================================
+
+---------------------------------------------------------
+
+Inicializar uma aplicação docker compose:
+
+docker-compose up
+
+Parar uma aplicação docker compose:
+
+Ctrl+C
+
+Inicializar uma aplicação docker compose em background:
+
+docker-compose up -d
+
+Parar aplicações docker compose em background:
+
+docker-compose down
+
+Listar aplicações docker compose que estão nele:
+
+docker-compose ps
+
+---------------------------------------------------------

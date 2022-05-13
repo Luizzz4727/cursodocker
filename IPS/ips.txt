@@ -1,0 +1,2 @@
+# TOKEN PARA JOIN
+docker swarm join --token SWMTKN-1-54elpz623snptswhquahak9kcphywkdcsstfo3zy3vs1eb19ir-bji03akec1gxtfye7p4u0d665 192.168.0.18:2377

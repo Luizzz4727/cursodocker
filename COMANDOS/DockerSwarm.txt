@@ -1,0 +1,113 @@
+=========================================================
+
+DOCKER SWARM
+
+=========================================================
+
+---------------------------------------------------------
+
+Conceitos:
+
+Nodes: é uma instância (máquina) que participa do Swarm || Máquinas que estão rodando no Swarm
+
+Manager Node: Node que gerencia os demais Nodes || Máquina encarregada de administrar das outras máquinas
+
+Worker Node: Nodes que trabalham em função do Manager || Máquina que está esperando ordens para serem executadas, estão servindo o projeto também
+
+Service: Um conjunto de Tasks que o Manager Node manda o Worker Node executar || Os container que estão rodando
+
+Task: comandos que são executados nos Nodes || Todo comando que o Manager manda para os Workers replicarem
+
+---------------------------------------------------------
+
+Inicializando Swarm no docker:
+
+docker swarm init
+
+Inicializando Swarm com IP: (Em alguns casos é necessário)
+
+docker swarm init --advertise-addr <ip_maquina>
+
+Sair do Swarm:
+
+docker swarm leave -f
+
+Listar nodes ativos:
+
+docker node ls
+
+Adicionar nodes em um Swarm: (O comando aparecerá quando o primeiro node for adicionado ao swarm)
+
+docker swarm join --token <token> <ip>:<porta>
+
+Subir um Serviço (container):
+
+docker service create --name <nome_servico> <imagem>
+
+Listar Serviço:
+
+docker service ls
+
+Remover Serviço:
+
+docker service rm <id_servico>||<nome_servico>
+
+Aumentar o número de réplicas para outros nodes:
+
+docker service create --name <nome_servico> --replicas <numero_replicas> <imagem>
+
+Receber o comando join para adicionar novos nodes:
+
+docker swarm join-token manager
+
+Checar a estrutura do Swarm:
+
+docker info
+
+Remover um node do Swarm:
+
+docker node rm <id_node>
+
+Inpecionar serviços
+
+docker service inspect <id_servico>
+
+Verificar container ativados pelo serviço: (Resultado semelhante ao "docker ps -a")
+
+docker service ps <id_servico>
+
+Verificar nodes ativados: (Resultado semelhante ao "docker ps -a")
+
+docker node ps
+
+Rodar Compose com Swarm:
+
+docker stack deploy -c <arquivo_yaml> <nome_servico>
+
+Aumentar replicas do stack (A partir de um serviço iniciado no docker-compose):
+
+docker service scale <nome_servico>=<numero_replicas>
+
+Parar de receber tasks em um node:
+
+docker node update --availability drain <id_node>
+
+Voltar a receber tasks em um node:
+
+docker node update --availability active <id_node>
+
+Atualizar um parâmetro de um serviço: (Apenas em nodes com status active)
+
+docker service update --image <imagem> <id_servico>
+
+Criar redes no Swarm:
+
+docker network create --driver overlay <nome_rede>
+
+docker service create --name <nome_servico> --replicas <numero_replicas> -p <porta>:<porta> --network <nome_rede> <nome_imagem>
+
+Conectar um serviço em uma rede:
+
+docker service update --network-add <nome_rede> <id_servico>
+
+---------------------------------------------------------
